@@ -1,0 +1,22 @@
+# Database
+# Expected to be provdied
+# mysql_database_name:
+# mysql_database_user:
+# mysql_database_user_password:
+mysql_database_charset: utf8
+mysql_database_collate: utf8_bin
+
+# MySQL
+mysql_default_storage_engine: InnoDB
+mysql_binlog_format: ROW
+mysql_query_cache_size: 0
+
+# InnoDB
+mysql_innodb_file_format: Barracuda
+mysql_innodb_autoinc_lock_mode: 2
+
+# Extras
+# By default we put this in the SSH users home directory - and remove it after
+# execution. By changing this to another location the script will not be removed
+# automatically by the role, so it can be used in dev.
+mysql_new_database_script: '/home/{{ ansible_ssh_user }}/_create_database.sh'
