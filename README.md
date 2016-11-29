@@ -7,7 +7,7 @@ The config defaults are designed to match a production MariaDB/Galera cluster, a
 Need to provide in group vars:
 
 ```yaml
-# Expected to be provdied
+# Expected to be provided
 mysql_database_name: my_database
 mysql_database_user: my_user
 mysql_database_user_password: some_password
