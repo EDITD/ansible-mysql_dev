@@ -19,12 +19,10 @@
     enabled=yes
     state={{ 'restarted' if updated_config.changed else 'running' }}
 
-- name: Create MySQL user
+- name: Ensure MySQL user exists
   shell: >
-    # Check for the user
     (echo "SELECT user, host FROM mysql.user;" | mysql | grep {{ mysql_database_user }})
     ||
-    # If not present, create
     (echo "CREATE USER '{{ mysql_database_user }}'@'localhost' IDENTIFIED BY '{{ mysql_database_user_password }}';" | mysql)
 
 - name: Generate new database script
@@ -33,8 +31,11 @@
     dest={{ mysql_new_database_script }}
     mode=777
 
-- name: Create new MySQL database
-  shell: sh {{ mysql_new_database_script }}
+- name: Ensure MySQL database exists
+  shell: >
+    (echo "SHOW DATABASES;" | mysql | grep {{ mysql_database_name }})
+    ||
+    sh {{ mysql_new_database_script }}
 
 - name: Remove new database script
   file: path={{ mysql_new_database_script }} state=absent
