@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# Exit on error
+set -e
+
+# Drop the current database?
 if [ "$1" = "--drop" ]; then
     echo "DROP DATABASE {{ mysql_database_name }};" | mysql
 fi
