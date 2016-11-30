@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# Exit on error
+set -e
+
+# Drop the current database?
+if [ "$1" = "--drop" ]; then
+    echo "DROP DATABASE {{ mysql_database_name }};" | mysql
+fi
+
+# Setup local database
+echo "CREATE DATABASE {{ mysql_database_name }} CHARACTER SET {{ mysql_database_charset }} COLLATE {{ mysql_database_collate }};" | mysql
+echo "GRANT ALL PRIVILEGES ON *.* TO '{{ mysql_database_user }}'@'localhost';" | mysql
+echo "FLUSH PRIVILEGES;" | mysql

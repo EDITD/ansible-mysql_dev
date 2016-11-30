@@ -1,0 +1,42 @@
+- name: Install MySQL
+  apt:
+    name={{ item }}
+    state=present
+    update_cache=true
+    cache_valid_time=3600
+  with_items:
+  - mysql-server
+
+- name: Generate MySQL config
+  template:
+    src=templates/mysql.cnf.j2
+    dest=/etc/mysql/conf.d/mysql.cnf
+  register: updated_config
+
+- name: (re)Start MySQL
+  service:
+    name=mysql
+    enabled=yes
+    state={{ 'restarted' if updated_config.changed else 'running' }}
+
+- name: Ensure MySQL user exists
+  shell: >
+    (echo "SELECT user, host FROM mysql.user;" | mysql | grep {{ mysql_database_user }})
+    ||
+    (echo "CREATE USER '{{ mysql_database_user }}'@'localhost' IDENTIFIED BY '{{ mysql_database_user_password }}';" | mysql)
+
+- name: Generate new database script
+  template:
+    src=templates/create_new_database.sh.j2
+    dest={{ mysql_new_database_script }}
+    mode=777
+
+- name: Ensure MySQL database exists
+  shell: >
+    (echo "SHOW DATABASES;" | mysql | grep {{ mysql_database_name }})
+    ||
+    sh {{ mysql_new_database_script }}
+
+- name: Remove new database script
+  file: path={{ mysql_new_database_script }} state=absent
+  when: mysql_new_database_script == '/home/{{ ansible_ssh_user }}/_create_database.sh'
