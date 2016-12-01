@@ -39,4 +39,4 @@
 
 - name: Remove new database script
   file: path={{ mysql_new_database_script }} state=absent
-  when: mysql_new_database_script == '/home/{{ ansible_ssh_user }}/_create_database.sh'
+  when: mysql_new_database_script == default_mysql_new_database_script

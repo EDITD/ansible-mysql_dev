@@ -19,4 +19,5 @@ mysql_innodb_autoinc_lock_mode: 2
 # By default we put this in the SSH users home directory - and remove it after
 # execution. By changing this to another location the script will not be removed
 # automatically by the role, so it can be used in dev.
-mysql_new_database_script: '/home/{{ ansible_ssh_user }}/_create_database.sh'
+default_mysql_new_database_script: '/home/{{ ansible_ssh_user }}/_create_database.sh'
+mysql_new_database_script: '{{ default_mysql_new_database_script }}'
