@@ -21,7 +21,7 @@
 
 - name: Ensure MySQL user exists
   shell: >
-    (echo "SELECT user, host FROM mysql.user;" | mysql | grep {{ mysql_database_user }})
+    (echo "SELECT user FROM mysql.user;" | mysql | grep {{ mysql_database_user }})
     ||
     (echo "CREATE USER '{{ mysql_database_user }}'@'localhost' IDENTIFIED BY '{{ mysql_database_user_password }}';" | mysql)
 
